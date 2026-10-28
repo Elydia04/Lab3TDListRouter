@@ -27,30 +27,32 @@ const TodoList = () => {
             To-Do List Interface
           </h1>
 
-          <form onSubmit={handleAddTask} className="flex gap-2 mb-6">
+          <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-2 mb-6">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Enter a new task..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Add Task
-            </button>
-            {tasks.length > 0 && (
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <button
-                type="button"
-                onClick={clearAllTasks}
-                className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors"
+                type="submit"
+                className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
               >
-                Clear All
+                Add Task
               </button>
-            )}
+              {tasks.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllTasks}
+                  className="w-full sm:w-auto bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
           </form>
 
           <div className="space-y-3">
@@ -87,19 +89,31 @@ const TodoList = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => toggleTaskStatus(task.id)}
-                      className={`px-4 py-1 rounded-md text-white text-sm ${
+                      className={`p-2 rounded-md text-white ${
                         task.status === "done"
                           ? "bg-yellow-600 hover:bg-yellow-700"
                           : "bg-green-600 hover:bg-green-700"
                       } transition-colors`}
+                      title={task.status === "done" ? "Mark Not Done" : "Mark Done"}
                     >
-                      {task.status === "done" ? "Mark Not Done" : "Mark Done"}
+                      {task.status === "done" ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
                     </button>
                     <button
                       onClick={() => deleteTask(task.id)}
-                      className="bg-red-600 text-white px-4 py-1 rounded-md text-sm hover:bg-red-700 transition-colors"
+                      className="bg-red-600 text-white p-2 rounded-md hover:bg-red-700 transition-colors"
+                      title="Delete"
                     >
-                      Delete
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
                     </button>
                   </div>
                 </div>

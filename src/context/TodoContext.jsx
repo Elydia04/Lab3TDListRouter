@@ -61,6 +61,12 @@ export const TodoProvider = ({ children }) => {
     setGroups((prev) => [...prev, newGroup]);
   };
 
+  // Delete a group and all tasks that belong to it
+  const deleteGroup = (groupId) => {
+    setGroups((prev) => prev.filter((group) => group.id !== groupId));
+    setTasks((prev) => prev.filter((task) => task.groupId !== groupId));
+  };
+
   // Get only tasks that belong to a specific group
   const getTasksByGroup = (groupId) => {
     return tasks.filter((task) => task.groupId === groupId);
@@ -83,6 +89,7 @@ export const TodoProvider = ({ children }) => {
     deleteTask,
     clearAllTasks,
     addGroup,
+    deleteGroup,
     getTasksByGroup,
     getTaskStats,
   };

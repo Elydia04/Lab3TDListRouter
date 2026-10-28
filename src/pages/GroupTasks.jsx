@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import Layout from "../components/Layout";
+import { useTodo } from "../context/useTodo";
+
+const GroupTasks = () => {
+  const { groupId } = useParams();
+  const { groups, getTasksByGroup, addTask, toggleTaskStatus, deleteTask } =
+    useTodo();
+  const [inputValue, setInputValue] = useState("");
+
+  const group = groups.find((g) => g.id === groupId);
+  const tasks = getTasksByGroup(groupId);
+
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    addTask(inputValue, groupId);
+    setInputValue("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleAddTask(e);
+    }
+  };
+
+  if (!group) {
+    return (
+      <Layout>
+        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+          <h1 className="text-xl font-bold text-red-600 mb-4">
+            Group not found
+          </h1>
+          <Link
+            to="/groups"
+            className="text-blue-600 hover:underline"
+          >
+            Back to Groups
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout>
+      <div className="space-y-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {group.name}
+            </h1>
+            <Link
+              to="/groups"
+              className="text-blue-600 hover:underline"
+            >
+              ← Back to Groups
+            </Link>
+          </div>
+
+          <form onSubmit={handleAddTask} className="flex gap-2 mb-6">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Add task to this group..."
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Add Task
+            </button>
+          </form>
+
+          <div className="space-y-3">
+            {tasks.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">
+                No tasks in this group yet. Add a task to get started!
+              </p>
+            ) : (
+              tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-md bg-gray-50"
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        task.status === "done"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {task.status === "done" ? "Done" : "Not Done"}
+                    </span>
+                    <span
+                      className={`text-gray-900 ${
+                        task.status === "done"
+                          ? "line-through text-gray-500"
+                          : ""
+                      }`}
+                    >
+                      {task.text}
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => toggleTaskStatus(task.id)}
+                      className={`px-4 py-1 rounded-md text-white text-sm ${
+                        task.status === "done"
+                          ? "bg-yellow-600 hover:bg-yellow-700"
+                          : "bg-green-600 hover:bg-green-700"
+                      } transition-colors`}
+                    >
+                      {task.status === "done" ? "Mark Not Done" : "Mark Done"}
+                    </button>
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="bg-red-600 text-white px-4 py-1 rounded-md text-sm hover:bg-red-700 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default GroupTasks;

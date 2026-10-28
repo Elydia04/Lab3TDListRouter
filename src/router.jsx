@@ -11,6 +11,8 @@ import Home from "./pages/Home";
 // Define all routes for the application
 const router = createBrowserRouter([
   { path: "/", element: <Dashboard /> }, // Default route - Dashboard
+  { path: "/dashboard", element: <Dashboard /> }, // Dashboard route
+  { path: "/Dashboard", element: <Dashboard /> }, // Dashboard route (case-insensitive support)
   { path: "/home", element: <Home /> }, // Home/Landing page
   { path: "/todo", element: <TodoList /> }, // Main To-Do List interface
   { path: "/groups", element: <Groups /> }, // Task Groups/Categories page
